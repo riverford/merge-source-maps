@@ -22,7 +22,7 @@ export class SourceFile {
     this._path = generatedFilePath;
     this._source = fs.readFileSync(generatedFilePath).toString();
 
-    let prefixIndex = this._source.indexOf(mappingUrlPrefix);
+    let prefixIndex = this._source.lastIndexOf(mappingUrlPrefix);
     if (prefixIndex === -1) {
       // No source map.
       this._urlStart = -1;

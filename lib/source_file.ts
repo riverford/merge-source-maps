@@ -116,12 +116,17 @@ export class SourceMap {
     this._map = map;
     this._consumer = new SourceMapModule.SourceMapConsumer(map);
     this._sourceFileMap = {};
-    this._sourceFiles = this.getAbsoluteSourcePaths().map((sourcePath) => {
-      const m = new SourceFile(sourcePath);
-      // Map relative path to sourcefile.
-      this._sourceFileMap[sourcePath] = m;
-      return m;
-    });
+    this._sourceFiles = this.getAbsoluteSourcePaths().reduce((acc, sourcePath) => {
+      try {
+          const m = new SourceFile(sourcePath);
+          // Map relative path to sourcefile.
+          this._sourceFileMap[sourcePath] = m;
+          acc.push(m);
+      } catch {
+          console.error("Failed to access source path: '" + sourcePath + "'.");
+      }
+      return acc;
+    }, []);
   }
 
   public getFile(): SourceFile {
